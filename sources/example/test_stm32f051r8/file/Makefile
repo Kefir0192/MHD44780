@@ -5,7 +5,7 @@ NAMEPROJ   =test_stm32f051r8
 
 FLAGS	   = -mcpu=cortex-m0
 FLAGS	   += -mthumb
-FLAGS	   += -O3
+FLAGS	   += -O0
 
 # The path to the tool change
 TOOLCHAIN  =
@@ -28,6 +28,36 @@ LD         =$(TOOLCHAIN)arm-none-eabi-ld
 OBJDUMP    =$(TOOLCHAIN)arm-none-eabi-objdump
 OBJCOPY    =$(TOOLCHAIN)arm-none-eabi-objcopy
 SIZE       =$(TOOLCHAIN)arm-none-eabi-size
+
+
+
+#===========================================================================
+# MOneWire
+#===========================================================================
+# Рабочий каталог
+MOneWire_p_onewire  =../../../../../MOneWire/sources/onewire/
+
+
+# Дополнительные пути
+MOneWire_p_onewire_inc=$(MOneWire_p_onewire)inc/
+MOneWire_p_onewire_src=$(MOneWire_p_onewire)src/
+
+# Дополнительные включения
+MOneWire_p_onewire_I= \
+          -I$(MOneWire_p_onewire_inc)
+
+MOneWire_inc= \
+	$(MOneWire_p_onewire_inc)onewire.h \
+	$(MOneWire_p_onewire_inc)onewire_device.h \
+	$(MOneWire_p_onewire_inc)onewire_master.h
+	
+MOneWire_opj= \
+	onewire_master.o
+
+
+
+onewire_master.o: $(MOneWire_p_onewire_src)onewire_master.c $(MOneWire_inc)
+	$(CC) $(CCFLAGS) -c $(MOneWire_p_onewire_src)onewire_master.c -o onewire_master.o
 
 
 
@@ -70,7 +100,8 @@ hd44780_portmacro.o: $(MHD44780_p_src)hd44780_portmacro.c $(MHD44780_inc)
 MAIN_I     =-I$(PATH_INC) \
             -I$(PATH_INC)cmsis \
             -I$(PATH_INC)cmsis/Include \
-			$(MHD44780_p_I)
+			$(MHD44780_p_I) \
+			$(MOneWire_p_onewire_I)
 
 #===========================================================================
 # LIB FLAGS
@@ -119,8 +150,8 @@ AFOBJ= \
 
 
 .PHONY : all
-all: $(AFOBJ) $(MHD44780_opj)
-	@$(LD) $(AFOBJ) $(MHD44780_opj) $(LINKFLAGS) $(LIBFLAGS) -o $(PATH_BIN)$(NAMEPROJ).elf
+all: $(AFOBJ) $(MHD44780_opj) $(MOneWire_opj)
+	@$(LD) $(AFOBJ) $(MHD44780_opj) $(MOneWire_opj) $(LINKFLAGS) $(LIBFLAGS) -o $(PATH_BIN)$(NAMEPROJ).elf
 	@$(OBJDUMP) -D $(PATH_BIN)$(NAMEPROJ).elf > $(PATH_BIN)$(NAMEPROJ).asm
 	@$(OBJCOPY) $(PATH_BIN)$(NAMEPROJ).elf $(PATH_BIN)$(NAMEPROJ).bin -O binary
 

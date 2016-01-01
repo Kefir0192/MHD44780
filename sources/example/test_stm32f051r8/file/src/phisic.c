@@ -1,6 +1,7 @@
 #include "globalincludefile.h"
 #include "main.h"
 #include "phisic.h"
+#include "onewire_master.h"
 
 
 
@@ -32,8 +33,22 @@ void Oscillator_Init(void)
 //------------------------------------------------------
 void Port_Init(void)
 {
-    RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
-    GPIOC->MODER |= (GPIO_MODER_MODER7_0 | GPIO_MODER_MODER8_0 | GPIO_MODER_MODER9_0);
+    RCC->AHBENR |= RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOFEN;
+    GPIOC->MODER |= (GPIO_MODER_MODER0_0 |
+                     GPIO_MODER_MODER1_0 |
+                     GPIO_MODER_MODER7_0 |
+                     GPIO_MODER_MODER8_0 |
+                     GPIO_MODER_MODER9_0);
+
+    GPIOA->MODER |= (GPIO_MODER_MODER0_0 |
+                     GPIO_MODER_MODER1_0 |
+                     GPIO_MODER_MODER2_0 |
+                     GPIO_MODER_MODER3_0 |
+                     GPIO_MODER_MODER4_0 |
+                     GPIO_MODER_MODER5_0 |
+                     GPIO_MODER_MODER6_0);
+
+    GPIOF->MODER |= GPIO_MODER_MODER0_0 | GPIO_MODER_MODER1_0;
 }
 
 //------------------------------------------------------
@@ -123,6 +138,8 @@ void TIM6_DAC_IRQHandler(void)
 {
     if((TIM6->SR & BIT0)) {
         TIM6->SR &= ~BIT0;
+        if(!pAutonomous && !pOneWire_IO) return;
+                pAutonomous(pOneWire_IO);
     }
 }
 
