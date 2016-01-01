@@ -32,6 +32,39 @@ SIZE       =$(TOOLCHAIN)arm-none-eabi-size
 
 
 #===========================================================================
+# MHD44780
+#===========================================================================
+# Рабочий каталог
+MHD44780_p =../../../hd44780/
+
+
+# Дополнительные пути
+MHD44780_p_inc=$(MHD44780_p)inc/
+MHD44780_p_src=$(MHD44780_p)src/
+
+# Дополнительные включения
+MHD44780_p_I= \
+          -I$(MHD44780_p_inc)
+
+MHD44780_inc= \
+	$(MHD44780_p_inc)hd44780.h \
+	$(MHD44780_p_inc)hd44780_portmacro.h
+	
+MHD44780_opj= \
+	hd44780.o \
+	hd44780_portmacro.o
+
+
+
+hd44780.o: $(MHD44780_p_src)hd44780.c $(MHD44780_inc)
+	$(CC) $(CCFLAGS) -c $(MHD44780_p_src)hd44780.c -o hd44780.o
+	
+hd44780_portmacro.o: $(MHD44780_p_src)hd44780_portmacro.c $(MHD44780_inc)
+	$(CC) $(CCFLAGS) -c $(MHD44780_p_src)hd44780_portmacro.c -o hd44780_portmacro.o
+
+
+
+#===========================================================================
 # MAIN FLAGS COMPIL
 #===========================================================================
 MAIN_I     =-I$(PATH_INC) \
@@ -86,8 +119,8 @@ AFOBJ= \
 
 
 .PHONY : all
-all: $(AFOBJ)
-	@$(LD) $(AFOBJ) $(LINKFLAGS) $(LIBFLAGS) -o $(PATH_BIN)$(NAMEPROJ).elf
+all: $(AFOBJ) $(MHD44780_opj)
+	@$(LD) $(AFOBJ) $(MHD44780_opj) $(LINKFLAGS) $(LIBFLAGS) -o $(PATH_BIN)$(NAMEPROJ).elf
 	@$(OBJDUMP) -D $(PATH_BIN)$(NAMEPROJ).elf > $(PATH_BIN)$(NAMEPROJ).asm
 	@$(OBJCOPY) $(PATH_BIN)$(NAMEPROJ).elf $(PATH_BIN)$(NAMEPROJ).bin -O binary
 
