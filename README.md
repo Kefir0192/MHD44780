@@ -1,0 +1,8 @@
+	# MThreadStatic
+```
+
+```
+
+## License
+
+[BSD](./LICENSE).
