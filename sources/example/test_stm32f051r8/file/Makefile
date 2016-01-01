@@ -70,7 +70,7 @@ hd44780_portmacro.o: $(MHD44780_p_src)hd44780_portmacro.c $(MHD44780_inc)
 MAIN_I     =-I$(PATH_INC) \
             -I$(PATH_INC)cmsis \
             -I$(PATH_INC)cmsis/Include \
-			$(MOneWire_p_onewire_I)
+			$(MHD44780_p_I)
 
 #===========================================================================
 # LIB FLAGS
