@@ -1,4 +1,4 @@
-# Simple librari odds HD44780.
+# Simple library HD44780.
 
 #### Tree project
 ```
