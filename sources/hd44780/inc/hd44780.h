@@ -1,6 +1,10 @@
 #ifndef HD44780
 #define HD44780
 
+#define ADDR_LINE_0 0x00
+#define ADDR_LINE_1 0x40
+#define ADDR_LINE_2 0x10
+#define ADDR_LINE_3 0x50
 
 
 // Очистка экрана. Счетчик адреса на 0 позицию DDRAM
@@ -67,6 +71,10 @@ void HD44780_Write_Byte(uint8_t data);
 // HD44780 Cursor Position
 //------------------------------------------------------
 void HD44780_Cursor_Position(uint8_t position);
+
+// HD44780 Line Position
+//------------------------------------------------------
+void HD44780_Line_Position(uint8_t line_position);
 
 #endif // HD44780
 

@@ -39,3 +39,14 @@ void HD44780_Cursor_Position(uint8_t position)
 {
     HD44780_CMD(position | BIT7);
 }
+
+//------------------------------------------------------
+// HD44780 Line Position
+//------------------------------------------------------
+void HD44780_Line_Position(uint8_t line_position)
+{
+    if(line_position == 0) HD44780_Cursor_Position(ADDR_LINE_0);
+    if(line_position == 1) HD44780_Cursor_Position(ADDR_LINE_1);
+    if(line_position == 2) HD44780_Cursor_Position(ADDR_LINE_2);
+    if(line_position == 3) HD44780_Cursor_Position(ADDR_LINE_3);
+}
